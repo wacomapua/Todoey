@@ -21,10 +21,10 @@ class TodoListViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
+        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
 //        print(dataFilePath)
         
-//        loadItems()
+        loadItems()
     }
     
     //MARK - Tableview Datasource Methods
@@ -50,6 +50,10 @@ class TodoListViewController: UITableViewController {
 //        print(itemArray[indexPath.row])
         
         itemArray[indexPath.row].done = !itemArray[indexPath.row].done
+            
+//        Code below is for deleting Data
+//        context.delete(itemArray[indexPath.row])
+//        itemArray.remove(at: indexPath.row)
         
         tableView.deselectRow(at: indexPath, animated: true)
         
@@ -98,16 +102,16 @@ class TodoListViewController: UITableViewController {
 
     }
     
-//    func loadItems() {
-//        if let data = try? Data(contentsOf: dataFilePath!) {
-//            let decoder = PropertyListDecoder()
-//            do {
-//                itemArray = try decoder.decode([Item].self, from: data)
-//            } catch {
-//                print("Error decoding data \(error)")
-//            }
-//        }
-//    }
+    func loadItems() {
+        let request : NSFetchRequest<Item> = Item.fetchRequest()
+        do {
+            itemArray = try context.fetch(request)
+        } catch {
+            print("Error fetching data from context \(error)")
+        }
+        
+        
+    }
     
 }
 
